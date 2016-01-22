@@ -20,10 +20,29 @@ p = zeros(size(X, 1), 1);
 %       information see 'help max'. If your examples are in rows, then, you
 %       can use max(A, [], 2) to obtain the max for each row.
 %
-
-
-
-
+[x y]=size(X);
+fprintf("Size of X is %d,%d\n",x,y);
+X=[ones(m,1) X];
+[x y]=size(X);
+fprintf("Size of X is %d,%d\n",x,y);
+[x y]=size(Theta1);
+fprintf("Size of Theta1 is %d,%d\n",x,y);
+a2=sigmoid(Theta1*X');
+[x y]=size(a2);
+fprintf("Size of a2 is %d,%d\n",x,y);
+a2=a2';
+a2=[ones(size(a2,1),1) a2];
+[x y]=size(a2);
+fprintf("Size of a2 is %d,%d\n",x,y);
+[x y]=size(Theta2);
+fprintf("Size of Theta2 is %d,%d\n",x,y);
+a3=sigmoid(Theta2*a2');
+[x y]=size(a3);
+fprintf("Size of a3 is %d,%d\n",x,y);
+[x y]=size(a3);
+[z p]=max(a3);
+fprintf("Size of a3 is %d,%d\n",x,y);
+p=p';
 
 
 
