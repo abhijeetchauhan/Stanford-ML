@@ -61,23 +61,47 @@ Theta2_grad = zeros(size(Theta2));
 %               the regularization separately and then add them to Theta1_grad
 %               and Theta2_grad from Part 2.
 %
+% feedforward propagarion
+A1 = [ones(m, 1) X];
+Z2 = A1 * Theta1';
+A2 = [ones(m, 1) sigmoid(Z2)];
+Z3 = A2 * Theta2';
+A3 = sigmoid(Z3);
+% unroll y
+y=repmat(1:num_labels,size(y,1),1)==y;
+%First way to solve 
+%temp1=(y.*log(A3));temp2=(1-y).*log(1-A3);
+%J=(-1/m)*sum(sum(temp1 .+ temp2));
+%Second way to solve
+for i=1:m
+  J+=sum(y(i,:).*log(A3(i,:)).+(1-y(i,:)).*log(1-A3(i,:)));
+endfor
+J=(-1/m)*J;
+%Theta(:,2:end) remove the bias term
+J+=(lambda/(2*m))*(sum(sum(Theta1(:,2:end).^2))+sum(sum(Theta2(:,2:end).^2)));
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+% Backpropagation
+for i=1:m
+  % Step 1
+  y_vec = y(i, :)';
+  a1 = A1(i, :)';
+  a2 = A2(i, :)';
+  a3 = A3(i, :)';
+  z2 = Z2(i, :)';
+  % Step 2
+  delta3 = a3 .- y_vec;
+  % Step 3
+  delta2 = Theta2' * delta3 .* (a2.*(1-a2));
+  % Step 4
+  delta2 = delta2(2:end);
+  Theta1_grad = Theta1_grad .+ delta2 * a1';
+  Theta2_grad = Theta2_grad .+ delta3 * a2';
+endfor
+% Regularized implementation
+Theta1_grad(:,1)=Theta1_grad(:,1)./m;
+Theta2_grad(:,1)=Theta2_grad(:,1)./m;
+Theta1_grad(:,2:end)=Theta1_grad(:,2:end)./m+(lambda/m)*Theta1(:,2:end);
+Theta2_grad(:,2:end)=Theta2_grad(:,2:end)./m+(lambda/m)*Theta2(:,2:end);
 
 
 % -------------------------------------------------------------
